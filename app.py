@@ -31,3 +31,4 @@ def check_db():
 if __name__ == "__main__":
     # Этот блок не используется при запуске через Gunicorn в Docker
     app.run(host="0.0.0.0", port=8000)
+    print('Запуск')
