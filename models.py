@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import (
@@ -25,7 +26,9 @@ class Coffee(Base):
 
     # Типы слева — это типы значений, которые будут в экземпляре.
     # Справа — Column(...), mypy понимает это благодаря stubs для SQLAlchemy.
-    id: int = Column(Integer, Sequence("coffee_id_seq"), primary_key=True, nullable=False)
+    id: int = Column(
+        Integer, Sequence("coffee_id_seq"), primary_key=True, nullable=False
+    )
     title: str = Column(String(200), nullable=False)
     category: Optional[str] = Column(String(200))
     description: Optional[str] = Column(String(200))
