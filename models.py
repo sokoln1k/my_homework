@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 from typing import Optional
 
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, JSON, ARRAY
+from sqlalchemy import ARRAY, JSON, Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
+
 
 class Coffee(Base):
     __tablename__ = "coffee"
