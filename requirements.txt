@@ -6,3 +6,6 @@ alembic
 requests
 pydantic
 alembic
+mypy
+black
+isort
