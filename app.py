@@ -1,6 +1,7 @@
 import requests
 from flask import Flask, jsonify, request
 from sqlalchemy import func, select
+from sqlalchemy.sql import Select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -125,7 +126,7 @@ def get_new_user():
 def search_coffee_for_title(title: str):
     ts_query = func.plainto_tsquery("russian", title)
 
-    stmt = select(Coffee.title).where(Coffee.title.op("@@")(ts_query))
+    stmt: Select[tuple[str]] = select(Coffee.title).where(Coffee.title.op("@@")(ts_query))
 
     results = session.execute(stmt).scalars().first()
 
@@ -137,7 +138,7 @@ def search_coffee_for_title(title: str):
 
 @app.route("/reviews/unique", methods=["GET"])
 def search_unique_reviews_for_coffee():
-    stmt = select(func.unnest(Coffee.reviews)).distinct()
+    stmt: Select[tuple[str]] = select(func.unnest(Coffee.reviews)).distinct()
     unique_reviews = session.execute(stmt).scalars().all()
     if not unique_reviews:
         return jsonify({"error": "Нет уникальных заметок"})

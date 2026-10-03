@@ -1,6 +1,7 @@
-from typing import Any, Dict
-
+from __future__ import annotations
 import requests
+from typing import Any, Dict, List, Optional
+
 from sqlalchemy import (
     ARRAY,
     JSON,
@@ -23,14 +24,14 @@ session = Session()
 class Coffee(Base):
     __tablename__ = "coffee"
 
-    id = Column(Integer, Sequence("coffee_id_seq"), primary_key=True, nullable=False)
-    title = Column(String(200), nullable=False)
-    category = Column(String(200))
-    description = Column(String(200))
-    reviews = Column(ARRAY(String))
-    user = relationship("Users", back_populates="coffee")
+    id: int = Column(Integer, Sequence("coffee_id_seq"), primary_key=True, nullable=False)
+    title: str = Column(String(200), nullable=False)
+    category: Optional[str] = Column(String(200))
+    description: Optional[str] = Column(String(200))
+    reviews: List[str] = Column(ARRAY(String))
+    user: Optional[Users] = relationship("Users", back_populates="coffee")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Товар {self.title}"
 
     def to_json(self) -> Dict[str, Any]:
@@ -40,16 +41,16 @@ class Coffee(Base):
 class Users(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, Sequence("users_id_seq"), primary_key=True)
-    name = Column(String(50), nullable=False)
-    surname = Column(String(50), nullable=True)
-    patronomic = Column(String(50), nullable=True)
-    has_sale = Column(Boolean)
-    address = Column(JSON)
-    coffee_id = Column(Integer, ForeignKey("coffee.id"))
-    coffee = relationship("Coffee", back_populates="user")
+    id: int = Column(Integer, Sequence("users_id_seq"), primary_key=True)
+    name: str = Column(String(50), nullable=False)
+    surname: Optional[str] = Column(String(50))
+    patronomic: Optional[str] = Column(String(50))
+    has_sale: Optional[bool] = Column(Boolean)
+    address: Optional[Dict[str, Any]] = Column(JSON)
+    coffee_id: Optional[int] = Column(Integer, ForeignKey("coffee.id"))
+    coffee: Optional[Coffee] = relationship("Coffee", back_populates="user")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Пользователь {self.name}"
 
     def to_json(self) -> Dict[str, Any]:
