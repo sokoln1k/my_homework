@@ -1,3 +1,4 @@
+sqlalchemy-stubs
 flask
 gunicorn
 psycopg2-binary
@@ -8,4 +9,4 @@ pydantic
 mypy
 black
 isort
-sqlalchemy-stubs
+
