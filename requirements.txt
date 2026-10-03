@@ -8,4 +8,4 @@ pydantic
 mypy
 black
 isort
-sqlalchemy_stubs.mypy_plugin
+sqlalchemy_stubs
