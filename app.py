@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request  # Добавили Response для аннотаций
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
@@ -12,17 +12,18 @@ app = Flask(__name__)
 
 
 @app.before_request
-def before_first_request():
+def before_first_request() -> None:  # Добавили -> None
     Base.metadata.create_all(engine)
     if not session.query(Users).all():
         users_data = requests.get(
-            "https://dummyjson.com/users", params={"limit": 10}
+            "https://dummyjson.com/users", params={"limit": "10"}
         ).json()["users"]
         users_name = [user["firstName"] for user in users_data]
         users_address = [user["address"] for user in users_data]
 
         coffee_data = requests.get(
-            "https://dummyjson.com/products/search", params={"limit": 10, "q": "coffee"}
+            "https://dummyjson.com/products/search",
+            params={"limit": "10", "q": "coffee"},
         ).json()["products"][0]
         coffee_objects = {
             "title": coffee_data["title"],
@@ -85,7 +86,7 @@ def before_first_request():
 
 
 @app.route("/add/user", methods=["POST"])
-def get_new_user():
+def get_new_user() -> tuple[Response, int]:  # Указали тип возвращаемого значения Flask
     try:
         new_user = UserCreate(**request.json)
 
@@ -123,12 +124,13 @@ def get_new_user():
 
 
 @app.route("/search/coffee/<string:title>", methods=["GET"])
-def search_coffee_for_title(title: str):
+def search_coffee_for_title(
+    title: str,
+) -> tuple[Response, int] | Response:  # Добавили аннотацию
     ts_query = func.plainto_tsquery("russian", title)
 
-    stmt: Select[tuple[str]] = select(Coffee.title).where(
-        Coffee.title.op("@@")(ts_query)
-    )
+    # В старых версиях SQLAlchemy класс Select не принимает дженерики вида Select[tuple[str]]
+    stmt: Select = select([Coffee.title]).where(Coffee.title.op("@@")(ts_query))
 
     results = session.execute(stmt).scalars().first()
 
@@ -139,8 +141,8 @@ def search_coffee_for_title(title: str):
 
 
 @app.route("/reviews/unique", methods=["GET"])
-def search_unique_reviews_for_coffee():
-    stmt: Select[tuple[str]] = select(func.unnest(Coffee.reviews)).distinct()
+def search_unique_reviews_for_coffee() -> Response:  # Добавили аннотацию
+    stmt: Select = select([func.unnest(Coffee.reviews)]).distinct()
     unique_reviews = session.execute(stmt).scalars().all()
     if not unique_reviews:
         return jsonify({"error": "Нет уникальных заметок"})
