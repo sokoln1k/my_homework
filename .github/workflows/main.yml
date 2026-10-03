@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run mypy
-        run: mypy app.py
+        run: mypy .
 
   black:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Check Black formatting
-        run: black --diff --check app.py
+        run: black --diff --check .
 
   isort:
     runs-on: ubuntu-latest
@@ -57,4 +57,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Check isort imports
-        run: isort --check-only app.py
+        run: isort --check-only .
