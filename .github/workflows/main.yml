@@ -20,7 +20,10 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install sqlalchemy-stubs
+          
 
       - name: Run mypy
         run: mypy .
@@ -54,7 +57,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt 
 
       - name: Check isort imports
         run: isort --check-only --profile black .
