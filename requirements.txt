@@ -1,0 +1,8 @@
+flask
+gunicorn
+psycopg2-binary
+sqlalchemy
+alembic
+requests
+pydantic
+alembic
