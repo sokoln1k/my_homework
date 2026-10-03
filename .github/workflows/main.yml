@@ -57,4 +57,4 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Check isort imports
-        run: isort --check-only .
+        run: isort --check-only --profile black .
