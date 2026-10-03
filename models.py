@@ -1,5 +1,4 @@
 from __future__ import annotations
-import requests
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import (
@@ -24,12 +23,14 @@ session = Session()
 class Coffee(Base):
     __tablename__ = "coffee"
 
+    # Типы слева — это типы значений, которые будут в экземпляре.
+    # Справа — Column(...), mypy понимает это благодаря stubs для SQLAlchemy.
     id: int = Column(Integer, Sequence("coffee_id_seq"), primary_key=True, nullable=False)
     title: str = Column(String(200), nullable=False)
     category: Optional[str] = Column(String(200))
     description: Optional[str] = Column(String(200))
     reviews: List[str] = Column(ARRAY(String))
-    user: Optional[Users] = relationship("Users", back_populates="coffee")
+    user: Optional["Users"] = relationship("Users", back_populates="coffee")
 
     def __repr__(self) -> str:
         return f"Товар {self.title}"
@@ -48,7 +49,7 @@ class Users(Base):
     has_sale: Optional[bool] = Column(Boolean)
     address: Optional[Dict[str, Any]] = Column(JSON)
     coffee_id: Optional[int] = Column(Integer, ForeignKey("coffee.id"))
-    coffee: Optional[Coffee] = relationship("Coffee", back_populates="user")
+    coffee: Optional["Coffee"] = relationship("Coffee", back_populates="user")
 
     def __repr__(self) -> str:
         return f"Пользователь {self.name}"
