@@ -1,4 +1,4 @@
-sqlalchemy-stubs
+sqlalchemy_stubs
 flask
 gunicorn
 psycopg2-binary
