@@ -5,7 +5,7 @@ sqlalchemy
 alembic
 requests
 pydantic
-alembic
 mypy
 black
 isort
+sqlalchemy-stubs
